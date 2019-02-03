@@ -19,8 +19,6 @@ import (
 	_todoUcase "go-todo/todo/usecase"
 )
 
-var db *gorm.DB
-
 func init() {
 	viper.SetConfigFile(`config.json`)
 	err := viper.ReadInConfig()
@@ -53,7 +51,7 @@ func main() {
 
 	todoRepository := _todoRepo.NewTodoRepository(db)
 	todoService := _todoUcase.NewTodoUseCase(todoRepository)
-	_todoHttpDeliver.MakeTodoHandlers(r, *n, *todoService)
+	_todoHttpDeliver.MakeTodoHandlers(r, *n, todoService)
 
 	logger := log.New(os.Stderr, "logger: ", log.Lshortfile)
 	port := viper.GetString("port")

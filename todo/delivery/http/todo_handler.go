@@ -5,6 +5,7 @@ import (
 	"github.com/codegangsta/negroni"
 	"github.com/gorilla/mux"
 	"go-todo/models"
+	"go-todo/todo"
 	"go-todo/todo/usecase"
 	"log"
 	"net/http"
@@ -15,7 +16,7 @@ type TodoHandler struct {
 	todoUseCase usecase.TodoUseCase
 }
 
-func todoAdd(useCase usecase.TodoUseCase) http.Handler {
+func todoAdd(useCase todo.UseCase) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		errorMessage := "Error adding todo"
 		var t *models.Todo
@@ -45,7 +46,7 @@ func todoAdd(useCase usecase.TodoUseCase) http.Handler {
 	})
 }
 
-func todoUpdate(useCase usecase.TodoUseCase) http.Handler {
+func todoUpdate(useCase todo.UseCase) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		errorMessage := "Error updating todo"
 		vars := mux.Vars(r)
@@ -77,7 +78,7 @@ func todoUpdate(useCase usecase.TodoUseCase) http.Handler {
 	})
 }
 
-func todoFind(useCase usecase.TodoUseCase) http.Handler {
+func todoFind(useCase todo.UseCase) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		errorMessage := "Error reading todo"
 		vars := mux.Vars(r)
@@ -102,7 +103,7 @@ func todoFind(useCase usecase.TodoUseCase) http.Handler {
 	})
 }
 
-func todoDelete(useCase usecase.TodoUseCase) http.Handler {
+func todoDelete(useCase todo.UseCase) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
 		id, _ := strconv.Atoi(vars["id"])
@@ -112,7 +113,7 @@ func todoDelete(useCase usecase.TodoUseCase) http.Handler {
 }
 
 //MakeTodoHandlers make url handlers
-func MakeTodoHandlers(r *mux.Router, n negroni.Negroni, service usecase.TodoUseCase) {
+func MakeTodoHandlers(r *mux.Router, n negroni.Negroni, service todo.UseCase) {
 	r.Handle("/v1/todo", n.With(
 		negroni.Wrap(todoAdd(service)),
 	)).Methods("POST", "OPTIONS").Name("todoAdd")

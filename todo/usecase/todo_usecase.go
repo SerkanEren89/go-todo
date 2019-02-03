@@ -9,7 +9,7 @@ type TodoUseCase struct {
 	todorepository todo.Repository
 }
 
-func NewTodoUseCase(r todo.Repository) *TodoUseCase {
+func NewTodoUseCase(r todo.Repository) todo.UseCase {
 	return &TodoUseCase{r}
 }
 
