@@ -10,35 +10,33 @@ type TodoRepository struct {
 	db *gorm.DB
 }
 
-var db *gorm.DB
-
 func NewTodoRepository(db *gorm.DB) todo.Repository {
 	return &TodoRepository{db}
 }
 
-func (TodoRepository) FindById(id int) (*models.Todo, error) {
+func (tr TodoRepository) FindById(id int) (*models.Todo, error) {
 	var t models.Todo
-	if err := db.Where("id = ?", id).First(&t); err != nil {
+	if err := tr.db.Where("id = ?", id).First(&t); err != nil {
 		return nil, models.ErrNotFound
 	} else {
 		return &t, nil
 	}
 }
 
-func (TodoRepository) Save(t *models.Todo) {
-	db.Save(t)
+func (tr TodoRepository) Save(t *models.Todo) {
+	tr.db.Save(t)
 }
 
-func (TodoRepository) Update(id int, t *models.Todo) error {
+func (tr TodoRepository) Update(id int, t *models.Todo) error {
 	var taskToUpdate models.Todo
-	if err := db.Where("id = ?", id).First(&taskToUpdate).Error; err != nil {
+	if err := tr.db.Where("id = ?", id).First(&taskToUpdate).Error; err != nil {
 		return models.ErrNotFound
 	}
-	db.Save(t)
+	tr.db.Save(t)
 	return nil
 }
 
-func (TodoRepository) DeleteById(id int) {
+func (tr TodoRepository) DeleteById(id int) {
 	var t models.Todo
-	db.Where("id = ?", id).Delete(t)
+	tr.db.Where("id = ?", id).Delete(t)
 }
