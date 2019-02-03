@@ -1,0 +1,17 @@
+{
+  "debug": true,
+  "server": {
+    "address": ":8081"
+  },
+  "context":{
+    "timeout":2
+  },
+  "database": {
+      "host": "mysql",
+      "port": "3306",
+      "user": "user",
+      "pass": "password",
+      "name": "todo"
+  },
+  "port": 8080
+}

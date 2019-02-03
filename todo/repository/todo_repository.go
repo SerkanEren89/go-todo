@@ -1,0 +1,44 @@
+package repository
+
+import (
+	"github.com/jinzhu/gorm"
+	"go-todo/models"
+	"go-todo/todo"
+)
+
+type TodoRepository struct {
+	db *gorm.DB
+}
+
+var db *gorm.DB
+
+func NewTodoRepository(db *gorm.DB) todo.Repository {
+	return &TodoRepository{db}
+}
+
+func (TodoRepository) FindById(id int) (*models.Todo, error) {
+	var t models.Todo
+	if err := db.Where("id = ?", id).First(&t); err != nil {
+		return nil, models.ErrNotFound
+	} else {
+		return &t, nil
+	}
+}
+
+func (TodoRepository) Save(t *models.Todo) {
+	db.Save(t)
+}
+
+func (TodoRepository) Update(id int, t *models.Todo) error {
+	var taskToUpdate models.Todo
+	if err := db.Where("id = ?", id).First(&taskToUpdate).Error; err != nil {
+		return models.ErrNotFound
+	}
+	db.Save(t)
+	return nil
+}
+
+func (TodoRepository) DeleteById(id int) {
+	var t models.Todo
+	db.Where("id = ?", id).Delete(t)
+}
